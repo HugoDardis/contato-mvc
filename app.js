@@ -10,6 +10,11 @@ const ContatosRouter = require('./routes/ContatosRouter')
 
 const app = express();
 
+//Configurar o EJS como seu template engine
+
+app.set('view engine','ejs')
+
+
 // Criar uma rota get no endereço '/' para responder com msg ola 
 
 app.get('/', (req, res)=>{

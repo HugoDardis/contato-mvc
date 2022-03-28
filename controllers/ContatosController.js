@@ -1,15 +1,13 @@
 //Para testes, assumindo q usuario logado e o usuariode id=1
 const uid = 1;
 
-
-
 module.exports = {
   listarContatos: (req, res)=>{
     //Importar os contatos 
     let contatos = require(`../database/contatos_${uid}.json`)
 
     //enviando contaos para o cliente 
-    res.send(contatos)
+    res.render('home.ejs');
   },
   capturarContato: (req, res) => {
     //Importar os contatos 
