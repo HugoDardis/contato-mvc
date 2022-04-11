@@ -1,18 +1,24 @@
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+let usuarios = require('../database/usuarios.json');
 const path = require('path');
+const {check, body, validationResult} = require('express-validator')
 
 module.exports = {
   showResgistrar: (req, res) => {
     res.render('registro.ejs');
   },
   store: (req, res) => {
-        
-    // Capturar as informações que o usuário digitou
+     
+    let errors = validationResult(req);
+    console.log(errors.mapped());
+
+    if (errors.isEmpty()) {
+      // Capturar as informações que o usuário digitou
     let {nome, email, senha} = req.body;
 
     // Importar o array de usuários
-    let usuarios = require('../database/usuarios.json');
+    
 
     // Determinar o novo idNovo do usuário
     let idNovo = usuarios[usuarios.length - 1].id + 1;
@@ -34,9 +40,18 @@ module.exports = {
 
     // Salvar este array no arquivo usuarios.json
     fs.writeFileSync(path.join(__dirname,'/../database/usuarios.json'), JSON.stringify(usuarios, null, 4));
+    
+    // configurando session para o usuario que acabou de cadastrar
+    req.session.usuario = usuario
 
     // Direcionando o usuário para a rota GET /contatos
     res.redirect('/contatos');
+
+    }else{
+      res.render('registro', { errors: errors.mapped(), old: req.body})
+    }
+
+    
 },
   mostrarLogin: (req, res) => {
     res.render('login.ejs')
@@ -55,19 +70,22 @@ module.exports = {
 
     // verificar se o email existe e se a senha deste email confere
     //res.send({email, senha, usuarios})
-    usuarios.find(
+    let usuario = usuarios.find(
       u => u.email == email && bcrypt.compareSync(senha, u.senha)
-      //u => {
-      // if(u.email == email && bcrypt.compareSync(senha, u.senha)){
-      //  return true;
-      //} else {
-      //  return false;
-      //}
-      //}
+      
     );
-    // se o usuario nao for encontrado ou senha invalida, mandar erro
-    // se usuario estive correto: - setar a session do usuario para
-    //                            - redirecionar usuario para tela q lista contatos
+    
+    // se o usuario nao for encontrado ou senha invalida
+    if(usuario === undefined){
+      //mandar erro 
+      return res.render('login.ejs',{erro:1,email,senha});
+    } 
+      // se usuario estive correto: - setar a session do usuario para
+      req.session.usuario = usuario;
+
+      //- redirecionar usuario para tela q lista contatos
+      res.redirect('/contatos');
+    
 
   }
 }

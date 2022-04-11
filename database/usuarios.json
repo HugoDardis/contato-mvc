@@ -4,7 +4,7 @@
         "nome": "Naruto Uzumaki",
         "email": "naruto@teste.com",
         "senha": "$2b$10$f9ElcnNIDjjG6GDx/qX8VOepwk7bPB.I01tEiwA9OSR7AJptx6KtW",
-        "adimplente": true
+        "adimplente": false
     },
     {
         "id": 2,
@@ -20,5 +20,4 @@
         "senha": "$2b$10$f9ElcnNIDjjG6GDx/qX8VOepwk7bPB.I01tEiwA9OSR7AJptx6KtW",
         "adimplente": true
     }
-    
 ]
